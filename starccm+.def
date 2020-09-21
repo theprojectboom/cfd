@@ -1,0 +1,28 @@
+Bootstrap: library
+From: ubuntu:20.04
+Stage: build
+
+%files
+    wgetdrive.sh .
+
+%post
+    apt-get -y update && apt-get install -y wget
+    bash wgetdrive.sh '1TFxOn-8W-Kc5OlEbZjMqZ1v_IoccxVfM' starccm.tar.gz
+    tar xf starccm.tar.gz
+    ./starccm+_15.04.008/STAR-CCM+15.04.008_01_linux-x86_64-2.12_gnu7.1.sh -i silent -DPRODUCTEXCELLENCEPROGRAM=0
+
+Bootstrap: library
+From: ubuntu:20.04
+Stage: final
+
+%environment
+    export CDLMD_LICENSE_FILE=1999@license.siemens.theprojectboom.org
+
+%files from build
+    /opt/Siemens/ /opt/
+
+%startscript
+    exec /opt/Siemens/15.04.008/STAR-CCM+15.04.008/star/bin/starccm+ -server
+
+%help
+    singularity instance start starccm+.sif starccm+
