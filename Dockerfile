@@ -35,15 +35,16 @@ EXPOSE 22
 RUN useradd -m boom -p U6aMy0wojraho
 
 # Set STAR-CCM+ network server for root and the user
-WORKDIR /root
-RUN echo 'CDLMD_LICENSE_FILE=1999@license.siemens.theprojectboom.org' > .flexlmrc
-
 USER boom
 WORKDIR /home/boom
 RUN echo 'CDLMD_LICENSE_FILE=1999@license.siemens.theprojectboom.org' > .flexlmrc
 
+USER root
+WORKDIR /root
+RUN echo 'CDLMD_LICENSE_FILE=1999@license.siemens.theprojectboom.org' > .flexlmrc
 
 # Run server
-CMD ["/usr/sbin/sshd"]
-#CMD ["srun", "hostname". "|", "sort", "|", "uniq", ">", "~/machinefile"]
+EXPOSE 40000-50000
+CMD ["/usr/sbin/sshd", "-D"]
+# CMD ["srun", "hostname". "|", "sort", "|", "uniq", ">", "~/machinefile"]
 # CMD ["/opt/Siemens/15.04.008/STAR-CCM+15.04.008/star/bin/starccm+", "-server"]
